@@ -30,6 +30,24 @@ x4-sec scan --sarif results.sarif
 - Default-deny mindset for unknown high-risk surfaces
 - Read-only CI permissions
 
+<!-- X4-APEX-DIAGRAM-START:x4-ai-security-scanner -->
+
+```mermaid
+flowchart TB
+    REPO[Repository, Skills, Hooks, MCP Config] --> DISCOVER[Input Discovery]
+    DISCOVER --> RULES[Versioned Deterministic Rules]
+    RULES --> FINDINGS[Findings with ID, Severity, Confidence]
+    FINDINGS --> REMEDY[Remediation Guidance]
+    FINDINGS --> JSON[JSON Output]
+    FINDINGS --> SARIF[SARIF 2.1.0 Output]
+    SARIF --> CODE[GitHub Code Scanning Consumer]
+    FIXTURE[Golden / Clean Fixtures] --> TESTS[Scanner Regression Tests]
+    RULES --> TESTS
+    NOTE[Read-only scanning; findings require review] -. interpret .-> REMEDY
+```
+
+<!-- X4-APEX-DIAGRAM-END:x4-ai-security-scanner -->
+
 ## License
 
 Apache-2.0
