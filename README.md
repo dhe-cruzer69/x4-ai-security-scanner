@@ -33,3 +33,26 @@ x4-sec scan --sarif results.sarif
 ## License
 
 Apache-2.0
+
+## APEX Architecture Map
+
+> Status: architecture documentation; implementation and deployment claims require independent verification.
+
+```mermaid
+flowchart TB
+  Target[Repository or file set] --> Config[Load explicit scan configuration]
+  Config --> Validate[Validate paths and rule config]
+  Validate --> Engine[Run enabled detection rules]
+  Engine --> Raw[Raw findings]
+  Raw --> Normalize[Normalize rule IDs and locations]
+  Normalize --> Suppress[Apply documented suppressions]
+  Suppress --> SARIF[Emit SARIF 2.1.0]
+  SARIF --> Schema{SARIF schema valid?}
+  Schema -->|no| Fail[Fail run + retain diagnostics]
+  Schema -->|yes| Fixture{Golden fixture assertions pass?}
+  Fixture -->|no| Fail
+  Fixture -->|yes| Artifact[Publish scan artifact]
+  Artifact --> Summary[Human-readable summary]
+```
+**Evidence note:** Output format, rules, fixture coverage, and CI artifact publication must be checked in code and workflow runs; this diagram is not a scan result.
+
